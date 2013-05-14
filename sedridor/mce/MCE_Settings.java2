@@ -1,0 +1,807 @@
+package sedridor.mce;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.lwjgl.input.Keyboard;
+import net.minecraft.client.Minecraft;
+
+public class MCE_Settings
+{
+    public static String Mithril = "yes";
+    public static String Adamantium = "yes";
+    public static String Runite = "yes";
+    public static String Dragonite = "yes";
+    public static String Crystal = "yes";
+    public static String Silver = "yes";
+    public static String Blurite = "yes";
+    public static String Bronze = "yes";
+    public static String Steel = "yes";
+    public static String Obsidium = "yes";
+    public static String Titanium = "yes";
+    //public static String Elementium = "yes";
+
+    public static int displacedBlockID = 2500;
+    public static int firstBlockID = 200;
+    public static int firstItemID = 17000;
+
+    public static int GreenLeavesID = 191;
+    public static int AutumnLeavesID = 192;
+    public static int SaplingID = 195;
+    public static int CatTailID = 193;
+    public static int FlowerID = 194;
+    public static int LeafPileID = 196;
+    public static int BlastFurnaceID = 197;
+    public static int ExtendedCraftingTableID = 199;
+
+    public static String InfoScreen = "yes";
+    public static String InfoScreenPlayer = "yes";
+    public static String InfoScreenBiome = "yes";
+    public static String InfoScreenChunk = "yes";
+    public static String InfoScreenCoords = "yes";
+    public static String InfoScreenHeading = "yes";
+    public static String InfoScreenSkylight = "yes";
+    public static String InfoScreenLight = "yes";
+    public static String InfoScreenVelocity = "yes";
+    public static String InfoScreenSeed = "yes";
+    public static String InfoScreenSpawn = "yes";
+    public static String InfoScreenTime = "yes";
+    public static String InfoScreenRain = "yes";
+    public static String InfoScreenThunder = "yes";
+    public static String InfoScreenEquipped = "yes";
+    public static String InfoScreenDurability = "yes";
+    public static String InfoScreenArrows = "yes";
+    public static String InfoScreenVillageInfo = "no";
+    public static String InfoScreenBlockTarget = "yes";
+    public static String InfoScreenEntityTarget = "yes";
+
+    public static String HUD = "yes";
+    public static String HudBiome = "yes";
+    public static String HudCoords = "yes";
+    public static String HudHeading = "yes";
+    public static String HudSkylight = "yes";
+    public static String HudLight = "yes";
+    public static String HudVelocity = "yes";
+    public static String HudSpawn = "yes";
+    public static String HudTime = "yes";
+    public static String HudRain = "yes";
+    public static String HudThunder = "yes";
+    public static String HudEquipped = "yes";
+    public static String HudDurability = "yes";
+    public static String HudArrows = "yes";
+    public static String HudBlockTarget = "yes";
+    public static String HudEntityTarget = "yes";
+    public static int HudCoordsType = 0;
+
+    public static String HideAchievements = "yes";
+    public static String ItemStackCount = "yes";
+    public static String ItemDamageCount = "yes";
+    public static String PowerOverlay = "no";
+    public static String PowerTexture = "no";
+
+    public static int HudKey = Keyboard.KEY_F6;
+    public static int InfoKey = Keyboard.KEY_F4;
+    public static String ArrowsMovement = "yes";
+    public static int ArrowsTurnrate = 30;
+
+    public static String Mobs = "yes";
+    public static String Biomes = "yes";
+    public static String Items = "yes";
+    public static String NPCs = "yes";
+    public static String World = "yes";
+
+    public static int DesertChance;
+    public static int ForestChance;
+    public static int ExtremeHillsChance;
+    public static int SwamplandChance;
+    public static int PlainsChance;
+    public static int TaigaChance;
+    public static int JungleChance;
+    public static int SavannaChance;
+    public static int RainforestChance;
+    public static int ShrublandChance;
+    public static int SeasonalForestChance;
+    public static int WoodlandsChance;
+    public static int GreenHillsChance;
+    public static int PineForestChance;
+    public static int GreenSwamplandsChance;
+    public static int RedrockChance;
+    public static int TundraChance;
+    public static int TimerScale;
+
+    public static double SlopeScale;
+    public static double HeightScale;
+    public static float GenCavesRarity;
+    public static float GenRavineRarity;
+    public static int GenDungeons;
+    public static float GenWaterInDesert;
+    public static String MultiLayerOreGeneration = "yes";
+
+    public static Map<String, List<Integer>> entitySettings = new HashMap<String, List<Integer>>();
+    //public static Map<String, Integer[]> entitySettings = new HashMap<String, Integer[]>();
+    //public static Map<String, EntitySettings> entitySettings2 = new HashMap<String, EntitySettings>();
+
+    private static Minecraft mc;
+    private static File optionsFile;
+    private static boolean hasInit = false;
+
+    public static void init(File options)
+    {
+    	mc = Minecraft.getMinecraft();
+        if (!hasInit)
+        {
+        	hasInit = true;
+            initDefaults();
+
+          optionsFile = new File(mc.mcDataDir, "MCE-Settings.txt");
+          loadOptions();
+        }
+    }
+
+    public static void initDefaults()
+    {
+        // Desert, Forest, ExtremeHills, Swampland, Plains, Taiga, Jungle;
+        // biomeChances = {15, 30, 5, 5, 25, 10, 10};
+        // Savanna, Rainforest, Shrubland, SeasonalForest, Woodlands, GreenHills, PineForest, GreenSwamplands, Redrock, Tundra;
+        // biomeChances = {15, 10, 10, 5, 25, 10, 15, 5, 5, 0};
+        DesertChance = 15;
+        ForestChance = 30;
+        ExtremeHillsChance = 5;
+        SwamplandChance = 5;
+        PlainsChance = 25;
+        TaigaChance = 10;
+        JungleChance = 10;
+
+        SavannaChance = 15;
+        RainforestChance = 30;
+        ShrublandChance = 5;
+        SeasonalForestChance = 5;
+        WoodlandsChance = 25;
+        GreenHillsChance = 10;
+        PineForestChance = 10;
+        GreenSwamplandsChance = 15;
+        RedrockChance = 30;
+        TundraChance = 5;
+
+        TimerScale = 1;
+
+        Mithril = "yes";
+        Adamantium = "yes";
+        Runite = "yes";
+        Dragonite = "yes";
+        Crystal = "yes";
+        Silver = "yes";
+        Blurite = "yes";
+        Bronze = "yes";
+        Steel = "yes";
+        Obsidium = "yes";
+        Titanium = "yes";
+        //Elementium = "yes";
+
+        displacedBlockID = 2500;
+        firstBlockID = 200;
+        firstItemID = 17000;
+
+        GreenLeavesID = 191;
+        AutumnLeavesID = 192;
+        SaplingID = 195;
+        CatTailID = 193;
+        FlowerID = 194;
+        LeafPileID = 196;
+        BlastFurnaceID = 197;
+        ExtendedCraftingTableID = 199;
+
+        InfoScreen = "yes";
+//      InfoScreenPlayer = "yes";
+//      InfoScreenBiome = "yes";
+//      InfoScreenChunk = "yes";
+//      InfoScreenCoords = "yes";
+//      InfoScreenHeading = "yes";
+//      InfoScreenSkylight = "yes";
+//      InfoScreenLight = "yes";
+//      InfoScreenVelocity = "yes";
+//      InfoScreenSeed = "yes";
+//      InfoScreenSpawn = "yes";
+//      InfoScreenTime = "yes";
+//      InfoScreenRain = "yes";
+//      InfoScreenThunder = "yes";
+//      InfoScreenEquipped = "yes";
+//      InfoScreenDurability = "yes";
+//      InfoScreenArrows = "yes";
+        InfoScreenVillageInfo = "no";
+//      InfoScreenBlockTarget = "yes";
+//      InfoScreenEntityTarget = "yes";
+
+        HUD = "yes";
+        HudBiome = "yes";
+        HudCoords = "yes";
+        HudHeading = "yes";
+        HudSkylight = "yes";
+        HudLight = "yes";
+        HudVelocity = "yes";
+        HudSpawn = "yes";
+        HudTime = "yes";
+        HudRain = "yes";
+        HudThunder = "yes";
+        HudEquipped = "yes";
+        HudDurability = "yes";
+        HudArrows = "yes";
+        HudBlockTarget = "yes";
+        HudEntityTarget = "yes";
+        HudCoordsType = 0;
+
+        HideAchievements = "yes";
+        ItemStackCount = "yes";
+        ItemDamageCount = "yes";
+        PowerOverlay = "no";
+        PowerTexture = "no";
+
+        HudKey = Keyboard.KEY_F6;
+        InfoKey = Keyboard.KEY_F4;
+        ArrowsMovement = "yes";
+        ArrowsTurnrate = 30;
+
+        Mobs = "yes";
+        Biomes = "yes";
+        Items = "yes";
+        NPCs = "yes";
+        World = "yes";
+
+        SlopeScale = 10.0D;
+        HeightScale = 12.0D;
+        GenCavesRarity = 0.25F;
+        GenRavineRarity = 0.1F;
+        GenDungeons = 8;
+        GenWaterInDesert = 0.2F;
+        MultiLayerOreGeneration = "yes";
+
+        //entitySettings2.put("Dwarf", new EntitySettings("Dwarf", 2, 0, 2, (String)null));
+        entitySettings.put("DwarfFemale", Arrays.asList(2, 0, 2));
+        entitySettings.put("DwarfMale", Arrays.asList(2, 0, 2));
+        entitySettings.put("ElfFemale", Arrays.asList(2, 0, 2));
+        entitySettings.put("ElfMale", Arrays.asList(2, 0, 2));
+        entitySettings.put("HumanFemale", Arrays.asList(2, 0, 2));
+        //entitySettings.put("HumanMale", Arrays.asList(0, 0, 1));
+        //entitySettings.put("Ogre2", Arrays.asList(0, 0, 1));
+
+        entitySettings.put("Dwarf", Arrays.asList(2, 0, 2));
+        entitySettings.put("Elf", Arrays.asList(2, 0, 2));
+        entitySettings.put("Ogre", Arrays.asList(1, 0, 2));
+        entitySettings.put("OrcFemale", Arrays.asList(2, 0, 3));
+        entitySettings.put("OrcMale", Arrays.asList(2, 0, 3));
+        entitySettings.put("Crusader", Arrays.asList(1, 0, 2));
+        entitySettings.put("Goblin", Arrays.asList(1, 0, 4));
+        entitySettings.put("Samurai", Arrays.asList(1, 0, 2));
+        entitySettings.put("BattleMonk", Arrays.asList(1, 0, 1));
+        entitySettings.put("Merchant", Arrays.asList(1, 0, 1));
+        entitySettings.put("DesertMerchant", Arrays.asList(1, 0, 1));
+        entitySettings.put("Gladiator", Arrays.asList(1, 0, 1));
+        entitySettings.put("Bandit", Arrays.asList(1, 0, 1));
+        entitySettings.put("Guard", Arrays.asList(1, 0, 2));
+        entitySettings.put("Pirate", Arrays.asList(1, 0, 4));
+        entitySettings.put("Reptilian", Arrays.asList(1, 0, 3));
+        entitySettings.put("Ranger", Arrays.asList(1, 0, 2));
+        entitySettings.put("Dovahkiin", Arrays.asList(1, 0, 1));
+        entitySettings.put("Assassin", Arrays.asList(1, 0, 1));
+        entitySettings.put("DarkKnight", Arrays.asList(1, 0, 1));
+        entitySettings.put("DarkMerchant", Arrays.asList(1, 0, 1));
+        entitySettings.put("SkeletonNinja", Arrays.asList(1, 0, 1));
+        entitySettings.put("SkeletonWarrior", Arrays.asList(1, 0, 2));
+        entitySettings.put("Viking", Arrays.asList(1, 0, 2));
+        entitySettings.put("WarriorPrincess", Arrays.asList(1, 0, 1));
+        entitySettings.put("RedDragon", Arrays.asList(1, 0, 1));
+        entitySettings.put("GoblinBomber", Arrays.asList(1, 0, 2));
+        entitySettings.put("GoblinShaman", Arrays.asList(1, 0, 2));
+        entitySettings.put("GoblinNinja", Arrays.asList(1, 0, 2));
+        entitySettings.put("GoblinRanger", Arrays.asList(1, 0, 2));
+        entitySettings.put("Ninja", Arrays.asList(1, 0, 1));
+        entitySettings.put("Minotaur", Arrays.asList(1, 0, 1));
+        entitySettings.put("Ghost", Arrays.asList(1, 0, 1));
+        entitySettings.put("Giant", Arrays.asList(1, 0, 1));
+        entitySettings.put("Lich", Arrays.asList(1, 0, 1));
+        entitySettings.put("Centaur", Arrays.asList(1, 0, 1));
+        entitySettings.put("Pygmy", Arrays.asList(1, 0, 4));
+    }
+
+    /**
+     * Loads the options from the options file.
+     */
+	public static void loadOptions() {
+        try
+        {
+            if (!optionsFile.exists())
+            {
+            	saveOptions();
+                return;
+            }
+
+            BufferedReader var1 = new BufferedReader(new FileReader(optionsFile));
+            String var2 = "";
+
+            while ((var2 = var1.readLine()) != null)
+            {
+                try
+                {
+                    if (var2.startsWith("#") || var2.length() == 0) { continue; }
+                    String[] var3 = var2.split(":");
+                    var3[0] = var3[0].trim();
+                    var3[1] = var3[1].trim();
+
+                    if (var3[0].equals("Mithril")) { Mithril = parseOption(var3[1], Mithril); }
+                    if (var3[0].equals("Adamantium")) { Adamantium = parseOption(var3[1], Adamantium); }
+                    if (var3[0].equals("Runite")) { Runite = parseOption(var3[1], Runite); }
+                    if (var3[0].equals("Dragonite")) { Dragonite = parseOption(var3[1], Dragonite); }
+                    if (var3[0].equals("Crystal")) { Crystal = parseOption(var3[1], Crystal); }
+                    if (var3[0].equals("Silver")) { Silver = parseOption(var3[1], Silver); }
+                    if (var3[0].equals("Blurite")) { Blurite = parseOption(var3[1], Blurite); }
+                    if (var3[0].equals("Bronze")) { Bronze = parseOption(var3[1], Bronze); }
+                    if (var3[0].equals("Steel")) { Steel = parseOption(var3[1], Steel); }
+                    if (var3[0].equals("Obsidium")) { Obsidium = parseOption(var3[1], Obsidium); }
+                    if (var3[0].equals("Titanium")) { Titanium = parseOption(var3[1], Titanium); }
+                    //if (var3[0].equals("Elementium")) { Elementium = parseOption(var3[1], Elementium); }
+                    if (var3[0].equals("BlockID Displacement")) {
+                    	int value = Integer.parseInt(var3[1]);
+                        if (value < 300 || value > 3400) { displacedBlockID = 2500; }
+                		else { displacedBlockID = value; }
+                    }
+                    if (var3[0].equals("Base BlockID")) {
+                    	int value = Integer.parseInt(var3[1]);
+                        if (value < 180 || value > 220) { firstBlockID = 200; }
+                		else { firstBlockID = value; }
+                    }
+                    if (var3[0].equals("Base ItemID")) {
+                    	int value = Integer.parseInt(var3[1]);
+                        if (value < 400 || value > 31000) { firstItemID = 17000; }
+                		else { firstItemID = value; }
+                    }
+
+                    if (var3[0].equals("GreenLeavesID")) {
+                    	int value = Integer.parseInt(var3[1]);
+                        if (value < 180 || value > 4095) { GreenLeavesID = 191; }
+                		else { GreenLeavesID = value; }
+                    }
+                    if (var3[0].equals("AutumnLeavesID")) {
+                    	int value = Integer.parseInt(var3[1]);
+                        if (value < 180 || value > 4095) { AutumnLeavesID = 192; }
+                		else { AutumnLeavesID = value; }
+                    }
+                    if (var3[0].equals("SaplingID")) {
+                    	int value = Integer.parseInt(var3[1]);
+                        if (value < 180 || value > 4095) { SaplingID = 195; }
+                		else { SaplingID = value; }
+                    }
+                    if (var3[0].equals("CatTailID")) {
+                    	int value = Integer.parseInt(var3[1]);
+                        if (value < 180 || value > 4095) { CatTailID = 193; }
+                		else { CatTailID = value; }
+                    }
+                    if (var3[0].equals("FlowerID")) {
+                    	int value = Integer.parseInt(var3[1]);
+                        if (value < 180 || value > 4095) { FlowerID = 194; }
+                		else { FlowerID = value; }
+                    }
+                    if (var3[0].equals("LeafPileID")) {
+                    	int value = Integer.parseInt(var3[1]);
+                        if (value < 180 || value > 4095) { LeafPileID = 196; }
+                		else { LeafPileID = value; }
+                    }
+                    if (var3[0].equals("BlastFurnaceID")) {
+                    	int value = Integer.parseInt(var3[1]);
+                        if (value < 180 || value > 4095) { BlastFurnaceID = 197; }
+                		else { BlastFurnaceID = value; }
+                    }
+                    if (var3[0].equals("ExtendedCraftingTableID")) {
+                    	int value = Integer.parseInt(var3[1]);
+                        if (value < 180 || value > 4095) { ExtendedCraftingTableID = 199; }
+                		else { ExtendedCraftingTableID = value; }
+                    }
+
+                    if (var3[0].equals("InfoScreen")) { InfoScreen = parseOption(var3[1], InfoScreen); }
+                    //if (var3[0].equals("InfoScreenPlayer")) { InfoScreenPlayer = parseOption(var3[1], InfoScreenPlayer); }
+                    //if (var3[0].equals("InfoScreenBiome")) { InfoScreenBiome = parseOption(var3[1], InfoScreenBiome); }
+                    //if (var3[0].equals("InfoScreenChunk")) { InfoScreenChunk = parseOption(var3[1], InfoScreenChunk); }
+                    //if (var3[0].equals("InfoScreenCoords")) { InfoScreenCoords = parseOption(var3[1], InfoScreenCoords); }
+                    //if (var3[0].equals("InfoScreenHeading")) { InfoScreenHeading = parseOption(var3[1], InfoScreenHeading); }
+                    //if (var3[0].equals("InfoScreenSkylight")) { InfoScreenSkylight = parseOption(var3[1], InfoScreenSkylight); }
+                    //if (var3[0].equals("InfoScreenLight")) { InfoScreenLight = parseOption(var3[1], InfoScreenLight); }
+                    //if (var3[0].equals("InfoScreenVelocity")) { InfoScreenVelocity = parseOption(var3[1], InfoScreenVelocity); }
+                    //if (var3[0].equals("InfoScreenSeed")) { InfoScreenSeed = parseOption(var3[1], InfoScreenSeed); }
+                    //if (var3[0].equals("InfoScreenSpawn")) { InfoScreenSpawn = parseOption(var3[1], InfoScreenSpawn); }
+                    //if (var3[0].equals("InfoScreenTime")) { InfoScreenTime = parseOption(var3[1], InfoScreenTime); }
+                    //if (var3[0].equals("InfoScreenRain")) { InfoScreenRain = parseOption(var3[1], InfoScreenRain); }
+                    //if (var3[0].equals("InfoScreenThunder")) { InfoScreenThunder = parseOption(var3[1], InfoScreenThunder); }
+                    //if (var3[0].equals("InfoScreenEquipped")) { InfoScreenEquipped = parseOption(var3[1], InfoScreenEquipped); }
+                    //if (var3[0].equals("InfoScreenDurability")) { InfoScreenDurability = parseOption(var3[1], InfoScreenDurability); }
+                    //if (var3[0].equals("InfoScreenArrows")) { InfoScreenArrows = parseOption(var3[1], InfoScreenArrows); }
+                    if (var3[0].equals("InfoScreenVillageInfo")) { InfoScreenVillageInfo = parseOption(var3[1], InfoScreenVillageInfo); }
+                    //if (var3[0].equals("InfoScreenBlockTarget")) { InfoScreenBlockTarget = parseOption(var3[1], InfoScreenBlockTarget); }
+                    //if (var3[0].equals("InfoScreenEntityTarget")) { InfoScreenEntityTarget = parseOption(var3[1], InfoScreenEntityTarget); }
+
+                    if (var3[0].equals("HUD")) { HUD = parseOption(var3[1], HUD); }
+                    if (var3[0].equals("HudBiome")) { HudBiome = parseOption(var3[1], HudBiome); }
+                    if (var3[0].equals("HudCoords")) { HudCoords = parseOption(var3[1], HudCoords); }
+                    if (var3[0].equals("HudHeading")) { HudHeading = parseOption(var3[1], HudHeading); }
+                    if (var3[0].equals("HudSkylight")) { HudSkylight = parseOption(var3[1], HudSkylight); }
+                    if (var3[0].equals("HudLight")) { HudLight = parseOption(var3[1], HudLight); }
+                    if (var3[0].equals("HudVelocity")) { HudVelocity = parseOption(var3[1], HudVelocity); }
+                    if (var3[0].equals("HudSpawn")) { HudSpawn = parseOption(var3[1], HudSpawn); }
+                    if (var3[0].equals("HudTime")) { HudTime = parseOption(var3[1], HudTime); }
+                    if (var3[0].equals("HudRain")) { HudRain = parseOption(var3[1], HudRain); }
+                    if (var3[0].equals("HudThunder")) { HudThunder = parseOption(var3[1], HudThunder); }
+                    if (var3[0].equals("HudEquipped")) { HudEquipped = parseOption(var3[1], HudEquipped); }
+                    if (var3[0].equals("HudDurability")) { HudDurability = parseOption(var3[1], HudDurability); }
+                    if (var3[0].equals("HudArrows")) { HudArrows = parseOption(var3[1], HudArrows); }
+                    if (var3[0].equals("HudBlockTarget")) { HudBlockTarget = parseOption(var3[1], HudBlockTarget); }
+                    if (var3[0].equals("HudEntityTarget")) { HudEntityTarget = parseOption(var3[1], HudEntityTarget); }
+                    if (var3[0].equals("HudCoordsType")) {
+                    	int value = Integer.parseInt(var3[1]);
+                        if (value < 0 || value > 2) { HudCoordsType = 0; }
+                		else { HudCoordsType = value; }
+                    }
+
+                    if (var3[0].equals("HideAchievements")) { HideAchievements = parseOption(var3[1], HideAchievements); }
+                    if (var3[0].equals("ItemStackCount")) { ItemStackCount = parseOption(var3[1], ItemStackCount); }
+                    if (var3[0].equals("ItemDamageCount")) { ItemDamageCount = parseOption(var3[1], ItemDamageCount); }
+                    if (var3[0].equals("PowerOverlay")) { PowerOverlay = parseOption(var3[1], PowerOverlay); }
+                    if (var3[0].equals("PowerTexture")) { PowerTexture = parseOption(var3[1], PowerTexture); }
+                    if (var3[0].equals("HudKey")) {
+                        if (Keyboard.getKeyIndex(var3[1]) < 1 || Keyboard.getKeyIndex(var3[1]) > 88) { HudKey = Keyboard.KEY_F6; }
+                		else { HudKey = Keyboard.getKeyIndex(var3[1]); }
+                    }
+                    if (var3[0].equals("InfoKey")) {
+                        if (Keyboard.getKeyIndex(var3[1]) < 1 || Keyboard.getKeyIndex(var3[1]) > 88 || Keyboard.getKeyIndex(var3[1]) == HudKey) { InfoKey = Keyboard.KEY_F4; }
+                		else { InfoKey = Keyboard.getKeyIndex(var3[1]); }
+                    }
+                    if (var3[0].equals("ArrowsMovement")) { ArrowsMovement = parseOption(var3[1], ArrowsMovement); }
+                    if (var3[0].equals("ArrowsTurnrate")) {
+                    	int value = Integer.parseInt(var3[1]);
+                        if (value < 5) { ArrowsTurnrate = 5; }
+                        else if (value > 60) { ArrowsTurnrate = 60; }
+                		else { ArrowsTurnrate = value; }
+                    }
+
+                    if (var3[0].equals("Mobs")) { Mobs = parseOption(var3[1], Mobs); }
+                    if (var3[0].equals("Biomes")) { Biomes = parseOption(var3[1], Biomes); }
+                    if (var3[0].equals("Items")) { Items = parseOption(var3[1], Items); }
+                    if (var3[0].equals("NPCs")) { NPCs = parseOption(var3[1], NPCs); }
+                    if (var3[0].equals("World")) { World = parseOption(var3[1], World); }
+
+                    if (var3[0].equals("DesertChance")) { DesertChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("ForestChance")) { ForestChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("ExtremeHillsChance")) { ExtremeHillsChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("SwamplandChance")) { SwamplandChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("PlainsChance")) { PlainsChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("TaigaChance")) { TaigaChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("JungleChance")) { JungleChance = Integer.parseInt(var3[1]); }
+
+                    if (var3[0].equals("SavannaChance")) { SavannaChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("RainforestChance")) { RainforestChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("ShrublandChance")) { ShrublandChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("SeasonalForestChance")) { SeasonalForestChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("WoodlandsChance")) { WoodlandsChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("GreenHillsChance")) { GreenHillsChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("PineForestChance")) { PineForestChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("GreenSwamplandsChance")) { GreenSwamplandsChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("RedrockChance")) { RedrockChance = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("TundraChance")) { TundraChance = Integer.parseInt(var3[1]); }
+
+                    if (var3[0].equals("SlopeScale")) { SlopeScale = Double.parseDouble(var3[1]); }
+                    if (var3[0].equals("HeightScale")) { HeightScale = Double.parseDouble(var3[1]); }
+                    if (var3[0].equals("GenCavesRarity")) { GenCavesRarity = Float.parseFloat(var3[1]); }
+                    if (var3[0].equals("GenRavineRarity")) { GenRavineRarity = Float.parseFloat(var3[1]); }
+                    if (var3[0].equals("GenDungeons")) { GenDungeons = Integer.parseInt(var3[1]); }
+                    if (var3[0].equals("GenWaterInDesert")) { GenWaterInDesert = Float.parseFloat(var3[1]); }
+                    if (var3[0].equals("MultiLayerOreGeneration")) { MultiLayerOreGeneration = parseOption(var3[1], MultiLayerOreGeneration); }
+
+                    if (var3[0].equals("TimerScale"))
+                    {
+                    	TimerScale = Integer.parseInt(var3[1]);
+                    	if (TimerScale > 72) { TimerScale = 72; }
+                        else if (TimerScale < 0) { TimerScale = 1; }
+                    }
+
+                    //if (var3[0].equals("Dwarf")) { entitySettings2.put("Dwarf", parseEntityOption2(var3[1], entitySettings2.get("Dwarf"))); }
+                    if (var3[0].equals("DwarfFemale")) { entitySettings.put("DwarfFemale", parseEntityOption(var3[1], "DwarfFemale")); }
+                    if (var3[0].equals("DwarfMale")) { entitySettings.put("DwarfMale", parseEntityOption(var3[1], "DwarfMale")); }
+                    if (var3[0].equals("ElfFemale")) { entitySettings.put("ElfFemale", parseEntityOption(var3[1], "ElfFemale")); }
+                    if (var3[0].equals("ElfMale")) { entitySettings.put("ElfMale", parseEntityOption(var3[1], "ElfMale")); }
+                    if (var3[0].equals("HumanFemale")) { entitySettings.put("HumanFemale", parseEntityOption(var3[1], "HumanFemale")); }
+                    //if (var3[0].equals("HumanMale")) { entitySettings.put("HumanMale", parseEntityOption(var3[1], "HumanMale")); }
+                    //if (var3[0].equals("Ogre2")) { entitySettings.put("Ogre2", parseEntityOption(var3[1], "Ogre2")); }
+
+                    if (var3[0].equals("Dwarf")) { entitySettings.put("Dwarf", parseEntityOption(var3[1], "Dwarf")); }
+                    if (var3[0].equals("Elf")) { entitySettings.put("Elf", parseEntityOption(var3[1], "Elf")); }
+                    if (var3[0].equals("Ogre")) { entitySettings.put("Ogre", parseEntityOption(var3[1], "Ogre")); }
+                    if (var3[0].equals("OrcFemale")) { entitySettings.put("OrcFemale", parseEntityOption(var3[1], "OrcFemale")); }
+                    if (var3[0].equals("OrcMale")) { entitySettings.put("OrcMale", parseEntityOption(var3[1], "OrcMale")); }
+                    if (var3[0].equals("Crusader")) { entitySettings.put("Crusader", parseEntityOption(var3[1], "Crusader")); }
+                    if (var3[0].equals("Goblin")) { entitySettings.put("Goblin", parseEntityOption(var3[1], "Goblin")); }
+                    if (var3[0].equals("Samurai")) { entitySettings.put("Samurai", parseEntityOption(var3[1], "Samurai")); }
+                    if (var3[0].equals("BattleMonk")) { entitySettings.put("BattleMonk", parseEntityOption(var3[1], "BattleMonk")); }
+                    if (var3[0].equals("Merchant")) { entitySettings.put("Merchant", parseEntityOption(var3[1], "Merchant")); }
+                    if (var3[0].equals("DesertMerchant")) { entitySettings.put("DesertMerchant", parseEntityOption(var3[1], "DesertMerchant")); }
+                    if (var3[0].equals("Gladiator")) { entitySettings.put("Gladiator", parseEntityOption(var3[1], "Gladiator")); }
+                    if (var3[0].equals("Bandit")) { entitySettings.put("Bandit", parseEntityOption(var3[1], "Bandit")); }
+                    if (var3[0].equals("Guard")) { entitySettings.put("Guard", parseEntityOption(var3[1], "Guard")); }
+                    if (var3[0].equals("Pirate")) { entitySettings.put("Pirate", parseEntityOption(var3[1], "Pirate")); }
+                    if (var3[0].equals("Reptilian")) { entitySettings.put("Reptilian", parseEntityOption(var3[1], "Reptilian")); }
+                    if (var3[0].equals("Ranger")) { entitySettings.put("Ranger", parseEntityOption(var3[1], "Ranger")); }
+                    if (var3[0].equals("Dovahkiin")) { entitySettings.put("Dovahkiin", parseEntityOption(var3[1], "Dovahkiin")); }
+                    if (var3[0].equals("Assassin")) { entitySettings.put("Assassin", parseEntityOption(var3[1], "Assassin")); }
+                    if (var3[0].equals("DarkKnight")) { entitySettings.put("DarkKnight", parseEntityOption(var3[1], "DarkKnight")); }
+                    if (var3[0].equals("DarkMerchant")) { entitySettings.put("DarkMerchant", parseEntityOption(var3[1], "DarkMerchant")); }
+                    if (var3[0].equals("SkeletonNinja")) { entitySettings.put("SkeletonNinja", parseEntityOption(var3[1], "SkeletonNinja")); }
+                    if (var3[0].equals("SkeletonWarrior")) { entitySettings.put("SkeletonWarrior", parseEntityOption(var3[1], "SkeletonWarrior")); }
+                    if (var3[0].equals("Viking")) { entitySettings.put("Viking", parseEntityOption(var3[1], "Viking")); }
+                    if (var3[0].equals("WarriorPrincess")) { entitySettings.put("WarriorPrincess", parseEntityOption(var3[1], "WarriorPrincess")); }
+                    if (var3[0].equals("RedDragon")) { entitySettings.put("RedDragon", parseEntityOption(var3[1], "RedDragon")); }
+                    if (var3[0].equals("GoblinBomber")) { entitySettings.put("GoblinBomber", parseEntityOption(var3[1], "GoblinBomber")); }
+                    if (var3[0].equals("GoblinShaman")) { entitySettings.put("GoblinShaman", parseEntityOption(var3[1], "GoblinShaman")); }
+                    if (var3[0].equals("GoblinNinja")) { entitySettings.put("GoblinNinja", parseEntityOption(var3[1], "GoblinNinja")); }
+                    if (var3[0].equals("GoblinRanger")) { entitySettings.put("GoblinRanger", parseEntityOption(var3[1], "GoblinRanger")); }
+                    if (var3[0].equals("Ninja")) { entitySettings.put("Ninja", parseEntityOption(var3[1], "Ninja")); }
+                    if (var3[0].equals("Minotaur")) { entitySettings.put("Minotaur", parseEntityOption(var3[1], "Minotaur")); }
+                    if (var3[0].equals("Ghost")) { entitySettings.put("Ghost", parseEntityOption(var3[1], "Ghost")); }
+                    if (var3[0].equals("Giant")) { entitySettings.put("Giant", parseEntityOption(var3[1], "Giant")); }
+                    if (var3[0].equals("Lich")) { entitySettings.put("Lich", parseEntityOption(var3[1], "Lich")); }
+                    if (var3[0].equals("Centaur")) { entitySettings.put("Centaur", parseEntityOption(var3[1], "Centaur")); }
+                    if (var3[0].equals("Pygmy")) { entitySettings.put("Pygmy", parseEntityOption(var3[1], "Pygmy")); }
+
+                    saveOptions();
+                }
+                catch (Exception var8)
+                {
+                    System.out.println("Skipping bad option: " + var2);
+                    var8.printStackTrace();
+                }
+            }
+            var1.close();
+        }
+        catch (Exception var9)
+        {
+            System.out.println("MinecraftEnhanced: Failed to load options");
+            var9.printStackTrace();
+        }
+	}
+	private static String parseOption(String value, String defaultValue)
+	{
+		if (value.equalsIgnoreCase("yes") || value.equalsIgnoreCase("no"))
+		{
+			return value.toLowerCase();
+		}
+		else
+		{
+			return defaultValue;
+		}
+	}
+
+//	private static EntitySettings parseEntityOption2(String value, EntitySettings defaultValue)
+//	{
+//        String[] var3 = value.split(",");
+//        String entity = var3[0].trim();
+//        int weight = Integer.parseInt(var3[1].trim());
+//        int minGroupCount = Integer.parseInt(var3[2].trim());
+//        int maxGroupCount = Integer.parseInt(var3[3].trim());
+//
+//        if (entity == null || entity.length() == 0) { return defaultValue; }
+//        if (weight < 0 || weight > 100) { weight = 0; }
+//		if (minGroupCount < 0 || minGroupCount > 10) { minGroupCount = 0; }
+//		if (maxGroupCount < 0 || maxGroupCount > 10) { maxGroupCount = 0; }
+//
+//		entitySettings2.put(entity, new EntitySettings(entity, weight, minGroupCount, maxGroupCount, (String)null));
+//		return entitySettings2.get(entity);
+//	}
+
+	private static List parseEntityOption(String value, String entity)
+	{
+        String[] newValue = value.replace("[", "").replace("]", "").split(",");
+        int weight = Integer.parseInt(newValue[0].trim());
+        int minGroupCount = Integer.parseInt(newValue[1].trim());
+        int maxGroupCount = Integer.parseInt(newValue[2].trim());
+
+        System.out.println("MC ... " + (weight) + " " + (minGroupCount) + " " + (maxGroupCount));
+        if (entity == null || entity.length() == 0) { return null; }
+        if (weight < 0 || weight > 100) { weight = 0; }
+		if (minGroupCount < 0 || minGroupCount > 10) { minGroupCount = 0; }
+		if (maxGroupCount < 0 || maxGroupCount > 10) { maxGroupCount = 0; }
+
+		entitySettings.put(entity, Arrays.asList(weight, minGroupCount, maxGroupCount));
+		
+		return entitySettings.get(entity);
+	}
+
+	public static boolean isEnabled(String value)
+	{
+		return value.equalsIgnoreCase("yes") ? true : false;
+	}
+
+	/**
+     * Saves the options to the options file.
+     */
+	public static void saveOptions()
+    {
+        try
+        {
+            PrintWriter var1 = new PrintWriter(new FileWriter(optionsFile));
+            var1.println("# MinecraftEnhanced 1.5.1 - Settings");
+            var1.println("# " + (new SimpleDateFormat("EEE dd MMM yyyy HH:mm:ss z")).format(new Date()));
+            var1.println("\n# Item Types");
+            var1.println("Mithril: " + Mithril);
+            var1.println("Adamantium: " + Adamantium);
+            var1.println("Runite: " + Runite);
+            var1.println("Dragonite: " + Dragonite);
+            var1.println("Crystal: " + Crystal);
+            var1.println("Silver: " + Silver);
+            var1.println("Blurite: " + Blurite);
+            var1.println("Bronze: " + Bronze);
+            var1.println("Steel: " + Steel);
+            var1.println("Obsidium: " + Obsidium);
+            var1.println("Titanium: " + Titanium);
+            //var1.println("Elementium: " + Elementium);
+
+            var1.println("\n# ID Settings");
+            var1.println("BlockID Displacement: " + displacedBlockID);
+            var1.println("Base BlockID: " + firstBlockID);
+            var1.println("Base ItemID: " + firstItemID);
+
+            var1.println("GreenLeavesID: " + GreenLeavesID);
+            var1.println("AutumnLeavesID: " + AutumnLeavesID);
+            var1.println("SaplingID: " + SaplingID);
+            var1.println("CatTailID: " + CatTailID);
+            var1.println("FlowerID: " + FlowerID);
+            var1.println("LeafPileID: " + LeafPileID);
+            var1.println("BlastFurnaceID: " + BlastFurnaceID);
+            var1.println("ExtendedCraftingTableID: " + ExtendedCraftingTableID);
+
+            var1.println("\n# Info Settings");
+            var1.println("InfoScreen: " + InfoScreen);
+            //var1.println("InfoScreenPlayer: " + InfoScreenPlayer);
+            //var1.println("InfoScreenBiome: " + InfoScreenBiome);
+            //var1.println("InfoScreenChunk: " + InfoScreenChunk);
+            //var1.println("InfoScreenCoords: " + InfoScreenCoords);
+            //var1.println("InfoScreenHeading: " + InfoScreenHeading);
+            //var1.println("InfoScreenSkylight: " + InfoScreenSkylight);
+            //var1.println("InfoScreenLight: " + InfoScreenLight);
+            //var1.println("InfoScreenVelocity: " + InfoScreenVelocity);
+            //var1.println("InfoScreenSeed: " + InfoScreenSeed);
+            //var1.println("InfoScreenSpawn: " + InfoScreenSpawn);
+            //var1.println("InfoScreenTime: " + InfoScreenTime);
+            //var1.println("InfoScreenRain: " + InfoScreenRain);
+            //var1.println("InfoScreenThunder: " + InfoScreenThunder);
+            //var1.println("InfoScreenEquipped: " + InfoScreenEquipped);
+            //var1.println("InfoScreenDurability: " + InfoScreenDurability);
+            //var1.println("InfoScreenArrows: " + InfoScreenArrows);
+            var1.println("InfoScreenVillageInfo: " + InfoScreenVillageInfo);
+            //var1.println("InfoScreenBlockTarget: " + InfoScreenBlockTarget);
+            //var1.println("InfoScreenEntityTarget: " + InfoScreenEntityTarget);
+
+            var1.println("\n# HUD Settings");
+            var1.println("HUD: " + HUD);
+            var1.println("HudBiome: " + HudBiome);
+            var1.println("HudCoords: " + HudCoords);
+            var1.println("HudHeading: " + HudHeading);
+            var1.println("HudSkylight: " + HudSkylight);
+            var1.println("HudLight: " + HudLight);
+            var1.println("HudVelocity: " + HudVelocity);
+            var1.println("HudSpawn: " + HudSpawn);
+            var1.println("HudTime: " + HudTime);
+            var1.println("HudRain: " + HudRain);
+            var1.println("HudThunder: " + HudThunder);
+            var1.println("HudEquipped: " + HudEquipped);
+            var1.println("HudDurability: " + HudDurability);
+            var1.println("HudArrows: " + HudArrows);
+            var1.println("HudBlockTarget: " + HudBlockTarget);
+            var1.println("HudEntityTarget: " + HudEntityTarget);
+            var1.println("HudCoordsType: " + HudCoordsType);
+
+            var1.println("\n# Misc Settings");
+            var1.println("HideAchievements: " + HideAchievements);
+            var1.println("ItemStackCount: " + ItemStackCount);
+            var1.println("ItemDamageCount: " + ItemDamageCount);
+            var1.println("PowerOverlay: " + PowerOverlay);
+            var1.println("PowerTexture: " + PowerTexture);
+            var1.println("HudKey: " + Keyboard.getKeyName(HudKey));
+            var1.println("InfoKey: " + Keyboard.getKeyName(InfoKey));
+            var1.println("ArrowsMovement: " + ArrowsMovement);
+            var1.println("ArrowsTurnrate: " + ArrowsTurnrate);
+            var1.println("TimerScale: " + TimerScale);
+
+            var1.println("\n# Modules");
+            var1.println("Mobs: " + Mobs);
+            var1.println("Biomes: " + Biomes);
+            var1.println("Items: " + Items);
+            var1.println("NPCs: " + NPCs);
+            var1.println("World: " + World);
+
+            var1.println("\n# WorldGenerator");
+            var1.println("DesertChance: " + DesertChance);
+            var1.println("ForestChance: " + ForestChance);
+            var1.println("ExtremeHillsChance: " + ExtremeHillsChance);
+            var1.println("SwamplandChance: " + SwamplandChance);
+            var1.println("PlainsChance: " + PlainsChance);
+            var1.println("TaigaChance: " + TaigaChance);
+            var1.println("JungleChance: " + JungleChance);
+
+            var1.println("SavannaChance: " + SavannaChance);
+            var1.println("RainforestChance: " + RainforestChance);
+            var1.println("ShrublandChance: " + ShrublandChance);
+            var1.println("SeasonalForestChance: " + SeasonalForestChance);
+            var1.println("WoodlandsChance: " + WoodlandsChance);
+            var1.println("GreenHillsChance: " + GreenHillsChance);
+            var1.println("PineForestChance: " + PineForestChance);
+            var1.println("GreenSwamplandsChance: " + GreenSwamplandsChance);
+            var1.println("RedrockChance: " + RedrockChance);
+            var1.println("TundraChance: " + TundraChance);
+
+            var1.println("SlopeScale: " + SlopeScale);
+            var1.println("HeightScale: " + HeightScale);
+            var1.println("GenCavesRarity: " + GenCavesRarity);
+            var1.println("GenRavineRarity: " + GenRavineRarity);
+            var1.println("GenDungeons: " + GenDungeons);
+            var1.println("GenWaterInDesert: " + GenWaterInDesert);
+            var1.println("MultiLayerOreGeneration: " + MultiLayerOreGeneration);
+
+            var1.println("\n# Entities");
+            var1.println("DwarfFemale: " + entitySettings.get("DwarfFemale"));
+            var1.println("DwarfMale: " + entitySettings.get("DwarfMale"));
+            var1.println("ElfFemale: " + entitySettings.get("ElfFemale"));
+            var1.println("ElfMale: " + entitySettings.get("ElfMale"));
+            var1.println("HumanFemale: " + entitySettings.get("HumanFemale"));
+            //var1.println("HumanMale: " + entitySettings.get("HumanMale"));
+            //var1.println("Ogre2: " + entitySettings.get("Ogre2"));
+
+            var1.println("\nDwarf: " + entitySettings.get("Dwarf"));
+            var1.println("Elf: " + entitySettings.get("Elf"));
+            var1.println("Ogre: " + entitySettings.get("Ogre"));
+            var1.println("OrcFemale: " + entitySettings.get("OrcFemale"));
+            var1.println("OrcMale: " + entitySettings.get("OrcMale"));
+            var1.println("Crusader: " + entitySettings.get("Crusader"));
+            var1.println("Goblin: " + entitySettings.get("Goblin"));
+            var1.println("Samurai: " + entitySettings.get("Samurai"));
+            var1.println("BattleMonk: " + entitySettings.get("BattleMonk"));
+            var1.println("Merchant: " + entitySettings.get("Merchant"));
+            var1.println("DesertMerchant: " + entitySettings.get("DesertMerchant"));
+            var1.println("Gladiator: " + entitySettings.get("Gladiator"));
+            var1.println("Bandit: " + entitySettings.get("Bandit"));
+            var1.println("Guard: " + entitySettings.get("Guard"));
+            var1.println("Pirate: " + entitySettings.get("Pirate"));
+            var1.println("Reptilian: " + entitySettings.get("Reptilian"));
+            var1.println("Ranger: " + entitySettings.get("Ranger"));
+            var1.println("Dovahkiin: " + entitySettings.get("Dovahkiin"));
+            var1.println("Assassin: " + entitySettings.get("Assassin"));
+            var1.println("DarkKnight: " + entitySettings.get("DarkKnight"));
+            var1.println("DarkMerchant: " + entitySettings.get("DarkMerchant"));
+            var1.println("SkeletonNinja: " + entitySettings.get("SkeletonNinja"));
+            var1.println("SkeletonWarrior: " + entitySettings.get("SkeletonWarrior"));
+            var1.println("Viking: " + entitySettings.get("Viking"));
+            var1.println("WarriorPrincess: " + entitySettings.get("WarriorPrincess"));
+            var1.println("RedDragon: " + entitySettings.get("RedDragon"));
+            var1.println("GoblinBomber: " + entitySettings.get("GoblinBomber"));
+            var1.println("GoblinShaman: " + entitySettings.get("GoblinShaman"));
+            var1.println("GoblinNinja: " + entitySettings.get("GoblinNinja"));
+            var1.println("GoblinRanger: " + entitySettings.get("GoblinRanger"));
+            var1.println("Ninja: " + entitySettings.get("Ninja"));
+            var1.println("Minotaur: " + entitySettings.get("Minotaur"));
+            var1.println("Ghost: " + entitySettings.get("Ghost"));
+            var1.println("Giant: " + entitySettings.get("Giant"));
+            var1.println("Lich: " + entitySettings.get("Lich"));
+            var1.println("Centaur: " + entitySettings.get("Centaur"));
+            var1.println("Pygmy: " + entitySettings.get("Pygmy"));
+            var1.close();
+        }
+        catch (Exception var6)
+        {
+            System.out.println("MinecraftEnhanced: Failed to save options");
+            var6.printStackTrace();
+        }
+    }
+}
